@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors= require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port= 5000;
 
 // enOMk7AtTpMtG9XY
@@ -33,7 +33,7 @@ async function run() {
 
     const database = client.db('easyLife');
     const service= database.collection('services');
-
+    // add-provider-services
     app.post('/addService',async (req,res)=>{
         const data = req.body.wrap;
         const provider = req.query.provider;
@@ -42,7 +42,7 @@ async function run() {
 
         res.send(result);
     });
-
+    // retrieve-service-provider-services
     app.get('/providerService',async (req,res)=>{
         const email = req.query.provider;
         const query = {provider : email}
@@ -53,6 +53,33 @@ async function run() {
         const result = await service.findOne(query,option)
 
         res.send(result);
+    })
+    // check whether service-provider have past data
+    app.get('/providerAllData',async (req,res)=>{
+      const user = req.query.user;
+      const query= {provider: user};
+      const collectData = service.find(query);
+      const result = await collectData.toArray()
+
+      res.send(result);
+    })
+    // update service-provider existed data
+    app.put('/updateService/:id',async(req,res)=>{
+      const params = req.params.id;
+      const data = req.body.wrap;
+      const query = {_id: new ObjectId(`${params}`)};
+      const updateDoc={
+        $set:{
+          service:data.service,
+          price:data.price,
+          description:data.description,
+          photo:data.photo
+        }
+      }
+      
+      const result = await service.updateOne(query,updateDoc);
+
+      res.send(result);
     })
   } finally {
     // Ensures that the client will close when you finish/error
