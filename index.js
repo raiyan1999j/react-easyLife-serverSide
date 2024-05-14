@@ -5,8 +5,6 @@ require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port= 5000;
 
-// enOMk7AtTpMtG9XY
-
 app.use(cors());
 app.use(express.json());
 
@@ -78,6 +76,15 @@ async function run() {
       }
       
       const result = await service.updateOne(query,updateDoc);
+
+      res.send(result);
+    })
+    // removeItem from service provider
+    app.delete('/removeItem/:id',async (req,res)=>{
+      const params = req.params.id;
+      const query = {_id: new ObjectId(`${params}`)};
+
+      const result = await service.deleteOne(query)
 
       res.send(result);
     })
