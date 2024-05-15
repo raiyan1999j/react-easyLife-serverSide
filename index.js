@@ -95,16 +95,23 @@ async function run() {
     // get all-services
     app.get('/allServices', async (req,res)=>{
       const user = req.query.userEmail;
+      const page = parseInt(req.query.pageNumber);
+      const perPage= 3;
+      
       let query;
-      if(user=='undefined'){
+      if(query == "undefined"){
         query={}
       }else{
-        query={currentUser:{$ne: user}}
+        query={currentUser:{$ne : user}}
       }
-      const containData = service.find(query);
-      const result =await containData.toArray();
 
-      res.send(result);
+      const totalDocument = await service.countDocuments(query);
+      const totalPage = Math.ceil(totalDocument/perPage);
+      const containData = service.find(query).skip((page - 1) * perPage).limit(perPage);
+      const result = await containData.toArray();
+      const wrap = {result,totalPage};
+
+      res.send(wrap);
     })
   } finally {
     // Ensures that the client will close when you finish/error
