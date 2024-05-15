@@ -35,7 +35,7 @@ async function run() {
     app.post('/addService',async (req,res)=>{
         const data = req.body.wrap;
         const provider = req.query.provider;
-        const wrap ={...data,provider}
+        const wrap ={...data,currentUser: provider}
         const result= await service.insertOne(wrap);
 
         res.send(result);
@@ -43,7 +43,7 @@ async function run() {
     // retrieve-service-provider-services
     app.get('/providerService',async (req,res)=>{
         const email = req.query.provider;
-        const query = {provider : email}
+        const query = {currentUser : email}
         const option={
             projection:{_id: 0,category: 1}
         }
@@ -55,7 +55,7 @@ async function run() {
     // check whether service-provider have past data
     app.get('/providerAllData',async (req,res)=>{
       const user = req.query.user;
-      const query= {provider: user};
+      const query= {currentUser: user};
       const collectData = service.find(query);
       const result = await collectData.toArray()
 
@@ -71,7 +71,11 @@ async function run() {
           service:data.service,
           price:data.price,
           description:data.description,
-          photo:data.photo
+          photo:data.photo,
+          location:data.location,
+          providerName: data.providerName,
+          providerEmail: data.providerEmail,
+          providerImg : data.providerImg
         }
       }
       
