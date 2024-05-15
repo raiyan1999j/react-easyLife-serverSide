@@ -92,6 +92,20 @@ async function run() {
 
       res.send(result);
     })
+    // get all-services
+    app.get('/allServices', async (req,res)=>{
+      const user = req.query.userEmail;
+      let query;
+      if(user=='undefined'){
+        query={}
+      }else{
+        query={currentUser:{$ne: user}}
+      }
+      const containData = service.find(query);
+      const result =await containData.toArray();
+
+      res.send(result);
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
