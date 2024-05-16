@@ -168,6 +168,13 @@ async function run() {
 
       res.send(result);
     })
+    // get data for home-page
+    app.get('/popular',async (req,res)=>{
+      const containData = service.find().limit(6);
+      const result =await containData.toArray();
+
+      res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
