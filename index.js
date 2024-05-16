@@ -31,6 +31,7 @@ async function run() {
 
     const database = client.db('easyLife');
     const service= database.collection('services');
+    const bookedService = database.collection('bookedService');
     // add-provider-services
     app.post('/addService',async (req,res)=>{
         const data = req.body.wrap;
@@ -126,6 +127,14 @@ async function run() {
 
       res.send(result)
     })
+    // purchaseItem
+    app.post('/purchaseItem',async(req,res)=>{
+        const info = req.body.wrap;
+        const result= bookedService.insertOne(info);
+
+        res.send(result);
+    })
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
