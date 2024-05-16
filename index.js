@@ -143,6 +143,31 @@ async function run() {
 
       res.send(result)
     })
+    // get todo-items
+    app.get('/todoService', async (req,res)=>{
+      const mail = req.query.userMail;
+      const query= {provider:`${mail}`};
+      const containData = bookedService.find(query);
+      const result = await containData.toArray();
+
+      res.send(result);
+    })
+    // status update
+    app.put('/statusUpdate',async (req,res)=>{
+      const trackId = req.body.wrap.id;
+      const changeStatus = req.body.wrap.status;
+      const query = {serviceId:`${trackId}`}
+
+      const update={
+        $set:{
+          status:`${changeStatus}`
+        }
+      }
+
+      const result = await bookedService.updateOne(query,update);
+
+      res.send(result);
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
