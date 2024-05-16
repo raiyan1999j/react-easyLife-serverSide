@@ -134,7 +134,15 @@ async function run() {
 
         res.send(result);
     })
+    // get booked-items
+    app.get('/bookedItem',async(req,res)=>{
+      const mail = req.query.userMail;
+      const query=  {receiver:`${mail}`};
+      const containData = bookedService.find(query);
+      const result = await containData.toArray();
 
+      res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
