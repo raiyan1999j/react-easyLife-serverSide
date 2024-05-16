@@ -118,6 +118,14 @@ async function run() {
 
       res.send(wrap)
     })
+    // get specific single data for details
+    app.get('/details/:id',async (req,res)=>{
+      const params = req.params.id;
+      const query ={_id: new ObjectId(`${params}`)};
+      const result= await service.findOne(query);
+
+      res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
